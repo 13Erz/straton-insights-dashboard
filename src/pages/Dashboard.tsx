@@ -1,27 +1,109 @@
 
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { TrendingUp, Package, Users, Warehouse, FileSpreadsheet, FileDown } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
-const salesData = [
-  { name: "Jan", value: 12500 },
-  { name: "Fév", value: 15800 },
-  { name: "Mar", value: 13200 },
-  { name: "Avr", value: 18500 },
-  { name: "Mai", value: 22100 },
-  { name: "Jun", value: 19800 },
+// Données CA mensuel (12 mois)
+const caData = [
+  { name: "Jan", value: 125000 },
+  { name: "Fév", value: 158000 },
+  { name: "Mar", value: 132000 },
+  { name: "Avr", value: 185000 },
+  { name: "Mai", value: 221000 },
+  { name: "Jun", value: 198000 },
+  { name: "Jul", value: 215000 },
+  { name: "Aoû", value: 189000 },
+  { name: "Sep", value: 207000 },
+  { name: "Oct", value: 234000 },
+  { name: "Nov", value: 198000 },
+  { name: "Déc", value: 142500 },
 ];
 
-const productionData = [
-  { name: "Prod A", value: 2400 },
-  { name: "Prod B", value: 1398 },
-  { name: "Prod C", value: 9800 },
-  { name: "Prod D", value: 3908 },
+// Données solde client
+const soldeClientData = [
+  { name: "Client A", value: 45000 },
+  { name: "Client B", value: 32000 },
+  { name: "Client C", value: 28000 },
+  { name: "Client D", value: 18000 },
+  { name: "Client E", value: 12000 },
 ];
 
-const COLORS = ['#8B5CF6', '#06D6A0', '#FFB627', '#F72585'];
+// Données ventes par produit (3 mois)
+const ventesProduitData = [
+  { 
+    produit: "Béton C30/37", 
+    mai: 85000, 
+    avril: 78000, 
+    mars: 82000 
+  },
+  { 
+    produit: "Mortier M5", 
+    mai: 42000, 
+    avril: 38000, 
+    mars: 45000 
+  },
+  { 
+    produit: "Granulats 0/4", 
+    mai: 28000, 
+    avril: 32000, 
+    mars: 29000 
+  },
+  { 
+    produit: "Sable lavé", 
+    mai: 35000, 
+    avril: 31000, 
+    mars: 33000 
+  },
+];
+
+// Données ventes par commercial (3 mois)
+const ventesCommercialData = [
+  { 
+    commercial: "Martin L.", 
+    mai: 95000, 
+    avril: 87000, 
+    mars: 92000 
+  },
+  { 
+    commercial: "Sophie D.", 
+    mai: 78000, 
+    avril: 82000, 
+    mars: 76000 
+  },
+  { 
+    commercial: "Thomas R.", 
+    mai: 65000, 
+    avril: 58000, 
+    mars: 71000 
+  },
+  { 
+    commercial: "Claire M.", 
+    mai: 52000, 
+    avril: 49000, 
+    mars: 54000 
+  },
+];
+
+const COLORS = ['#8B5CF6', '#EC4899', '#DC2626', '#FFFFFF'];
 
 const Dashboard = () => {
+  const handleExportExcel = () => {
+    toast({
+      title: "Export Excel",
+      description: "Le tableau de bord est en cours d'export...",
+    });
+  };
+
+  const handleExportPDF = () => {
+    toast({
+      title: "Export PDF", 
+      description: "Le tableau de bord est en cours d'export...",
+    });
+  };
+
   return (
     <DashboardLayout title="Tableau de bord">
       <div className="space-y-6 animate-fade-in">
@@ -30,7 +112,7 @@ const Dashboard = () => {
           <Card className="straton-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">CA Mensuel</CardTitle>
-              <span className="text-2xl">💰</span>
+              <TrendingUp className="h-5 w-5 text-straton-accent" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-straton-accent">142 500 €</div>
@@ -41,7 +123,7 @@ const Dashboard = () => {
           <Card className="straton-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Production</CardTitle>
-              <span className="text-2xl">🏭</span>
+              <Package className="h-5 w-5 text-straton-accent" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-straton-accent">2 840 T</div>
@@ -51,8 +133,8 @@ const Dashboard = () => {
 
           <Card className="straton-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Commandes</CardTitle>
-              <span className="text-2xl">📦</span>
+              <CardTitle className="text-sm font-medium">Consommation</CardTitle>
+              <Users className="h-5 w-5 text-straton-accent" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-straton-accent">186</div>
@@ -63,7 +145,7 @@ const Dashboard = () => {
           <Card className="straton-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Stock Total</CardTitle>
-              <span className="text-2xl">📊</span>
+              <Warehouse className="h-5 w-5 text-straton-accent" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-straton-accent">8 420 T</div>
@@ -72,15 +154,16 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Charts */}
+        {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Évolution CA */}
           <Card className="straton-card">
             <CardHeader>
-              <CardTitle className="font-heading">Évolution des Ventes</CardTitle>
+              <CardTitle className="font-heading">Évolution du chiffre d'affaires</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={salesData}>
+                <LineChart data={caData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="name" stroke="#9CA3AF" />
                   <YAxis stroke="#9CA3AF" />
@@ -103,15 +186,16 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
+          {/* Solde Client */}
           <Card className="straton-card">
             <CardHeader>
-              <CardTitle className="font-heading">Répartition Production</CardTitle>
+              <CardTitle className="font-heading">Solde Client</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={productionData}
+                    data={soldeClientData}
                     cx="50%"
                     cy="50%"
                     outerRadius={100}
@@ -119,7 +203,7 @@ const Dashboard = () => {
                     dataKey="value"
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
-                    {productionData.map((entry, index) => (
+                    {soldeClientData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -134,31 +218,83 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+
+          {/* Ventes par Produit */}
+          <Card className="straton-card">
+            <CardHeader>
+              <CardTitle className="font-heading">Ventes par Produit</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={ventesProduitData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="produit" stroke="#9CA3AF" />
+                  <YAxis stroke="#9CA3AF" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px'
+                    }} 
+                  />
+                  <Bar dataKey="mai" fill="#8B5CF6" name="Mai" />
+                  <Bar dataKey="avril" fill="#EC4899" name="Avril" />
+                  <Bar dataKey="mars" fill="#DC2626" name="Mars" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Ventes par Commercial */}
+          <Card className="straton-card">
+            <CardHeader>
+              <CardTitle className="font-heading">Ventes par Commercial</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={ventesCommercialData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="commercial" stroke="#9CA3AF" />
+                  <YAxis stroke="#9CA3AF" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px'
+                    }} 
+                  />
+                  <Bar dataKey="mai" fill="#8B5CF6" name="Mai" />
+                  <Bar dataKey="avril" fill="#EC4899" name="Avril" />
+                  <Bar dataKey="mars" fill="#DC2626" name="Mars" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Recent Activity */}
+        {/* Export Buttons */}
         <Card className="straton-card">
           <CardHeader>
-            <CardTitle className="font-heading">Activité Récente</CardTitle>
+            <CardTitle className="font-heading">Export du tableau de bord</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { time: "10:30", action: "Nouvelle réception", details: "Fournisseur 1542 - 50T Produit A" },
-                { time: "09:15", action: "Livraison expédiée", details: "Client 2001 - Commande #12845" },
-                { time: "08:45", action: "Production terminée", details: "Lot P-2025-001 - 125T" },
-                { time: "08:00", action: "Pesée effectuée", details: "Véhicule V001 - 38.5T" },
-              ].map((activity, index) => (
-                <div key={index} className="flex items-start space-x-4 p-3 rounded-lg bg-muted/50">
-                  <div className="text-sm font-medium text-straton-accent min-w-[60px]">
-                    {activity.time}
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-medium">{activity.action}</div>
-                    <div className="text-sm text-muted-foreground">{activity.details}</div>
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button 
+                variant="outline" 
+                onClick={handleExportExcel}
+                className="border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+              >
+                <FileSpreadsheet className="w-4 h-4 mr-2" />
+                Exporter en Excel
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleExportPDF}
+                className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+              >
+                <FileDown className="w-4 h-4 mr-2" />
+                Exporter en PDF
+              </Button>
             </div>
           </CardContent>
         </Card>
