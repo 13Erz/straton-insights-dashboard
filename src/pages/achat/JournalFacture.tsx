@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { FilterBar } from "@/components/FilterBar";
@@ -48,14 +47,14 @@ const filterFields = [
 ];
 
 const columns = [
-  { key: 'date', label: 'Date', type: 'date' },
-  { key: 'fournisseur', label: 'Fournisseur', type: 'text' },
-  { key: 'nomFournisseur', label: 'Nom Fournisseur', type: 'text' },
-  { key: 'numeroFacture', label: 'N° Facture', type: 'text' },
-  { key: 'montantHT', label: 'Montant HT', type: 'currency' },
-  { key: 'montantTVA', label: 'TVA', type: 'currency' },
-  { key: 'montantTTC', label: 'Montant TTC', type: 'currency' },
-  { key: 'statut', label: 'Statut', type: 'text' }
+  { key: 'date', label: 'Date', type: 'date' as const },
+  { key: 'fournisseur', label: 'Fournisseur', type: 'text' as const },
+  { key: 'nomFournisseur', label: 'Nom Fournisseur', type: 'text' as const },
+  { key: 'numeroFacture', label: 'N° Facture', type: 'text' as const },
+  { key: 'montantHT', label: 'Montant HT', type: 'currency' as const },
+  { key: 'montantTVA', label: 'TVA', type: 'currency' as const },
+  { key: 'montantTTC', label: 'Montant TTC', type: 'currency' as const },
+  { key: 'statut', label: 'Statut', type: 'text' as const }
 ];
 
 const AchatJournalFacture = () => {

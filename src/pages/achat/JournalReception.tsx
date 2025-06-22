@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { FilterBar } from "@/components/FilterBar";
@@ -67,13 +66,13 @@ const filterFields = [
 ];
 
 const columns = [
-  { key: 'date', label: 'Date', type: 'date' },
-  { key: 'fournisseur', label: 'Fournisseur', type: 'text' },
-  { key: 'nomFournisseur', label: 'Nom Fournisseur', type: 'text' },
-  { key: 'article', label: 'Article', type: 'text' },
-  { key: 'designation', label: 'Désignation', type: 'text' },
-  { key: 'quantite', label: 'Quantité', type: 'number' },
-  { key: 'montantTTC', label: 'Montant TTC', type: 'currency' }
+  { key: 'date', label: 'Date', type: 'date' as const },
+  { key: 'fournisseur', label: 'Fournisseur', type: 'text' as const },
+  { key: 'nomFournisseur', label: 'Nom Fournisseur', type: 'text' as const },
+  { key: 'article', label: 'Article', type: 'text' as const },
+  { key: 'designation', label: 'Désignation', type: 'text' as const },
+  { key: 'quantite', label: 'Quantité', type: 'number' as const },
+  { key: 'montantTTC', label: 'Montant TTC', type: 'currency' as const }
 ];
 
 const AchatJournalReception = () => {

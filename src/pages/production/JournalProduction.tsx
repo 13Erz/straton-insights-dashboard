@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { FilterBar } from "@/components/FilterBar";
@@ -48,14 +47,14 @@ const filterFields = [
 ];
 
 const columns = [
-  { key: 'date', label: 'Date', type: 'date' },
-  { key: 'of', label: 'OF', type: 'text' },
-  { key: 'article', label: 'Article', type: 'text' },
-  { key: 'designation', label: 'Désignation', type: 'text' },
-  { key: 'quantitePrevue', label: 'Qté Prévue', type: 'number' },
-  { key: 'quantiteProduite', label: 'Qté Produite', type: 'number' },
-  { key: 'rendement', label: 'Rendement (%)', type: 'number' },
-  { key: 'statut', label: 'Statut', type: 'text' }
+  { key: 'date', label: 'Date', type: 'date' as const },
+  { key: 'of', label: 'OF', type: 'text' as const },
+  { key: 'article', label: 'Article', type: 'text' as const },
+  { key: 'designation', label: 'Désignation', type: 'text' as const },
+  { key: 'quantitePrevue', label: 'Qté Prévue', type: 'number' as const },
+  { key: 'quantiteProduite', label: 'Qté Produite', type: 'number' as const },
+  { key: 'rendement', label: 'Rendement (%)', type: 'number' as const },
+  { key: 'statut', label: 'Statut', type: 'text' as const }
 ];
 
 const ProductionJournal = () => {
