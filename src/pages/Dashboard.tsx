@@ -1,26 +1,10 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { TrendingUp, Package, Users, Warehouse, FileSpreadsheet, FileDown } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-
-// Données CA mensuel (12 mois)
-const caData = [
-  { name: "Jan", value: 125000 },
-  { name: "Fév", value: 158000 },
-  { name: "Mar", value: 132000 },
-  { name: "Avr", value: 185000 },
-  { name: "Mai", value: 221000 },
-  { name: "Jun", value: 198000 },
-  { name: "Jul", value: 215000 },
-  { name: "Aoû", value: 189000 },
-  { name: "Sep", value: 207000 },
-  { name: "Oct", value: 234000 },
-  { name: "Nov", value: 198000 },
-  { name: "Déc", value: 142500 },
-];
+import { useState, useEffect } from "react";
 
 // Données solde client
 const soldeClientData = [
@@ -90,6 +74,94 @@ const ventesCommercialData = [
 const COLORS = ['#8B5CF6', '#EC4899', '#DC2626', '#FFFFFF'];
 
 const Dashboard = () => {
+  const [caActuel, setCaActuel] = useState<number | null>(null);
+  const [caEvolutionData, setCaEvolutionData] = useState<any[]>([]);
+  const [caLoading, setCaLoading] = useState(true);
+  const [caError, setCaError] = useState<string | null>(null);
+  const [graphLoading, setGraphLoading] = useState(true);
+  const [graphError, setGraphError] = useState<string | null>(null);
+
+  // Récupération du CA mensuel actuel
+  useEffect(() => {
+    const fetchCAActuel = async () => {
+      try {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1;
+
+        const response = await fetch('http://localhost:3000/chiffredaffaire', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            annee: currentYear,
+            mois: currentMonth
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération du CA');
+        }
+
+        const data = await response.json();
+        setCaActuel(typeof data === 'number' ? data : parseFloat(data));
+        setCaError(null);
+      } catch (error) {
+        console.error('Erreur CA:', error);
+        setCaError('Données indisponibles');
+      } finally {
+        setCaLoading(false);
+      }
+    };
+
+    fetchCAActuel();
+  }, []);
+
+  // Récupération des données d'évolution du CA
+  useEffect(() => {
+    const fetchGraphCA = async () => {
+      try {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1;
+
+        const response = await fetch('http://localhost:3000/graphchiffredaffaire', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            annee: currentYear,
+            mois: currentMonth
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des données graphique');
+        }
+
+        const data = await response.json();
+        setCaEvolutionData(Array.isArray(data) ? data : []);
+        setGraphError(null);
+      } catch (error) {
+        console.error('Erreur graphique CA:', error);
+        setGraphError('Données indisponibles');
+      } finally {
+        setGraphLoading(false);
+      }
+    };
+
+    fetchGraphCA();
+  }, []);
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('fr-MA', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount) + ' MAD';
+  };
+
   const handleExportExcel = () => {
     toast({
       title: "Export Excel",
@@ -115,8 +187,16 @@ const Dashboard = () => {
               <TrendingUp className="h-5 w-5 text-straton-accent" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-straton-accent">142 500 €</div>
-              <p className="text-xs text-muted-foreground">+12% vs mois dernier</p>
+              {caLoading ? (
+                <div className="text-2xl font-bold text-straton-accent">Chargement...</div>
+              ) : caError ? (
+                <div className="text-2xl font-bold text-red-500">Données indisponibles</div>
+              ) : (
+                <div className="text-2xl font-bold text-straton-accent">
+                  {caActuel ? formatCurrency(caActuel) : 'N/A'}
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground">Mois en cours</p>
             </CardContent>
           </Card>
 
@@ -162,31 +242,40 @@ const Dashboard = () => {
               <CardTitle className="font-heading">Évolution du chiffre d'affaires</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={caData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="name" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1F2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px'
-                    }} 
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#8B5CF6" 
-                    strokeWidth={3}
-                    dot={{ fill: '#8B5CF6', strokeWidth: 2, r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              {graphLoading ? (
+                <div className="h-[300px] flex items-center justify-center">
+                  <p className="text-muted-foreground">Chargement des données...</p>
+                </div>
+              ) : graphError ? (
+                <div className="h-[300px] flex items-center justify-center">
+                  <p className="text-red-500">Données indisponibles</p>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={caEvolutionData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                    <XAxis dataKey="name" stroke="#9CA3AF" />
+                    <YAxis stroke="#9CA3AF" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1F2937', 
+                        border: '1px solid #374151',
+                        borderRadius: '8px'
+                      }} 
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke="#8B5CF6" 
+                      strokeWidth={3}
+                      dot={{ fill: '#8B5CF6', strokeWidth: 2, r: 6 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
             </CardContent>
           </Card>
 
-          {/* Solde Client */}
           <Card className="straton-card">
             <CardHeader>
               <CardTitle className="font-heading">Solde Client</CardTitle>
@@ -219,7 +308,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Ventes par Produit */}
           <Card className="straton-card">
             <CardHeader>
               <CardTitle className="font-heading">Ventes par Produit</CardTitle>
@@ -245,7 +333,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Ventes par Commercial */}
           <Card className="straton-card">
             <CardHeader>
               <CardTitle className="font-heading">Ventes par Commercial</CardTitle>
@@ -272,7 +359,6 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Export Buttons */}
         <Card className="straton-card">
           <CardHeader>
             <CardTitle className="font-heading">Export du tableau de bord</CardTitle>
