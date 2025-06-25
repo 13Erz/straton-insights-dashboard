@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import AchatJournalReception from "./pages/achat/JournalReception";
 import AchatJournalFacture from "./pages/achat/JournalFacture";
 import VenteJournalLivraison from "./pages/vente/JournalLivraison";
+import VenteJournalFacture from "./pages/vente/JournalFacture";
 import ProductionJournal from "./pages/production/JournalProduction";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/achat/journal-reception" element={<AchatJournalReception />} />
           <Route path="/achat/journal-facture" element={<AchatJournalFacture />} />
           <Route path="/vente/journal-livraison" element={<VenteJournalLivraison />} />
+          <Route path="/vente/journal-facture" element={<VenteJournalFacture />} />
           <Route path="/production/journal-production" element={<ProductionJournal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
