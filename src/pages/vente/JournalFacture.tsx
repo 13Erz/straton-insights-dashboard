@@ -14,14 +14,14 @@ export default function JournalFacture() {
     {
       id: "date",
       label: "Date",
-      type: "range" as const,
+      type: "daterange" as const,
       placeholder: "Sélectionner les dates"
     },
     {
       id: "client",
       label: "Client",
-      type: "range" as const,
-      placeholder: "Numéro client"
+      type: "client" as const,
+      placeholder: "Client"
     }
   ];
 
@@ -38,10 +38,10 @@ export default function JournalFacture() {
       return;
     }
 
-    if (!filters.client_from || !filters.client_to) {
+    if (!filters.client_id) {
       toast({
         title: "Erreur",
-        description: "Veuillez saisir une plage de clients",
+        description: "Veuillez sélectionner un client",
         variant: "destructive",
       });
       return;
@@ -53,8 +53,7 @@ export default function JournalFacture() {
       const requestBody = {
         dateDebut: filters.date_from,
         dateFin: filters.date_to,
-        clientDebut: filters.client_from,
-        clientFin: filters.client_to
+        clientId: filters.client_id
       };
 
       console.log("Envoi de la requête POST:", requestBody);
