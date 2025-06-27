@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ interface FilterBarProps {
 interface FilterField {
   id: string;
   label: string;
-  type: 'date' | 'text' | 'number' | 'range' | 'autocomplete';
+  type: 'date' | 'text' | 'number' | 'range' | 'autocomplete' | 'daterange' | 'client';
   placeholder?: string;
   hasListButton?: boolean;
 }
